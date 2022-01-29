@@ -1,0 +1,20 @@
+1. cp .env.example .env
+
+2. Installed docker-compose development environment. Added: docker-compose.yaml, Dockerfile and run folder.
+
+3. Build and up: docker-compose build --no-cache && docker-compose up -d --force-recreate
+
+4. Access app container: docker exec -it webapp-app bash and run:
+    * composer install
+    * TODO: Move this to Dockerfile:
+        * Install nvm : curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+        * Install node and npm: nvm install 16.13.2
+    * npm install
+    * npm run dev
+
+5. Fix namespace on ./app/Contact.php and ./app/CustomAttribute.php and run composer dump autoload
+
+1. Fix this:
+Class App\Models\Contact located in ./app/Contact.php does not comply with psr-4 autoloading standard. Skipping.
+Class App\Models\CustomAttribute located in ./app/CustomAttribute.php does not comply with psr-4 autoloading standard. Skipping.
+

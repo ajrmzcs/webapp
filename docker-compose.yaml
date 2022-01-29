@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  webapp-app:
+    build:
+      context: '.'
+      args:
+        uid: ${UID}
+        user: ${WEBAPP_USER}
+    container_name: webapp-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - webapp-network
+
+  webapp-db:
+    image: mysql:5.7
+    container_name: webapp-db
+    volumes:
+      - ./run/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=voxie
+      - MYSQL_USER=webapp
+      - MYSQL_PASSWORD=secret
+    ports:
+      - 4306:3306
+    networks:
+      - webapp-network
+
+  webapp-nginx:
+    image: nginx:1.17-alpine
+    container_name: webapp-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./run/nginx:/etc/nginx/conf.d
+    networks:
+      - webapp-network
+
+networks:
+  webapp-network:
+    driver: bridge
