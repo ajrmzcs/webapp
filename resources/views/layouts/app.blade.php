@@ -51,14 +51,14 @@
                 <div class="header-navbar-shadow"></div>
                 @yield('content')
             </div>
-        
+
             <div class="sidenav-overlay"></div>
             <div class="drag-target"></div>
         </div>
     @endauth
 
     @guest
-        <div class="app-content content mt-5 pt-5">
+        <div class="app-content mt-5 pt-5">
             <div class="content-overlay"></div>
             <div class="header-navbar-shadow"></div>
             @yield('content')
