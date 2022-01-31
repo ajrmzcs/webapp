@@ -95,7 +95,11 @@ import Resources from './resources';
 
 var homeComponent = {
     name: 'HomeComponent',
-    
+
+    props: [
+        'base_url',
+    ],
+
     data() {
         return {
             isUploaderActive: true,
@@ -109,34 +113,34 @@ var homeComponent = {
     methods: {
         selectFile() {
             const validation = validateFile(this.$refs.uploader);
-            
+
             if (! validation.success) {
                 this.$refs.uploader.value = null;
                 alert(validation.message);
             }
-            
+
             let contacts = [];
-            var reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = (event) => {
                 let lines  = event.target.result.split('\n');
                 let columns = [];
-                
+
                 for (let i = 0; i < lines.length; i++) {
                     if (lines[i].length) {
                         columns = lines[i].split(',');
-                        
+
                         let jsObj = {};
 
-                        for (let j = 1; j < columns.length; j++) {
-                            jsObj[`column-${j}`] = columns[j];
+                        for (let j = 0; j < columns.length; j++) {
+                            jsObj[`column-${j+1}`] = columns[j];
                         }
-                        
+
                         contacts.push(jsObj);
                     }
                 }
             }
-            
+
             reader.readAsText(this.$refs.uploader.files[0]);
 
             reader.onloadend = () => {
@@ -165,25 +169,24 @@ var homeComponent = {
         importData() {
             let columns = {};
 
-            for (let i = 1; i < 6; i++) {
+            for (let i = 1; i <= this.columnsInDatabase; i++) {
                 columns[`column-${i}`] = document.getElementById(`column-${i}`).value;
             }
 
-            for (let i = 6; i < this.customFields.length; i++) {
-                columns[`column-${i}`] = document.getElementById(`column-${i}`).value;
-            }
-
-            console.log(this.contacts, columns);
-            
-            this.axios.post('/import', {
+            axios.post(this.base_url+'/import', {
                 contacts: this.contacts,
-                columns: columns
+                columns: columns,
             })
             .then(function (response) {
-                alert('Data imported successfully');
+                console.log(response.data)
+                alert('Data imported successfully. New Contacts:'
+                    +response.data.totalNewContacts
+                    +', New custom Attrs:'
+                    +response.data.totalNewCustoms
+                );
             })
             .catch(function (error) {
-                alert('Error: '+error);
+                alert('Error: '+ error.response.data.error);
             });
         }
     },

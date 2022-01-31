@@ -33,11 +33,11 @@ import Resources from './resources'
 export default {
 
     name:   'MainMenuComponent',
-    
+
     props: [
         'path',
     ],
-    
+
     data() {
         return {
             routes: Resources.routes
@@ -49,6 +49,5 @@ export default {
 
     mounted() {
     }
-
 }
 </script>

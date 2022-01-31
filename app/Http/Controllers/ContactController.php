@@ -2,42 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Contact;
-use Illuminate\Http\Request;
+use App\Contact;
+use App\Http\Requests\ContactRequest;
+use App\Services\ContactService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ContactController extends Controller
 {
-    
+
     public function index()
     {
         //
     }
-    
-    public function store(ContactRequest $request)
+
+    public function store(ContactRequest $request): JsonResponse
     {
         $parameters = $request->validated();
 
-        $contacts = [];
-
-        foreach ($parameters['contacts'] as $keyContact => $contact) {
-
-            $columnsNames = [];
-
-            foreach ($parameters['columns'] as $keyColumn => $column) {
-                $columnsNames[] = $column['column-'.($keyColumn + 1)];
-            }
-
-            foreach ($columnsNames as $keyColumnName => $columnName) {
-                $contacts[$keyContact][$columnName] = $contact[$keyColumnName];
-            }
-        }
-
-        $contact = Contact::create($contacts);
-
-        return response()->json([
-            'success' => true
-        ]);
+        $response = ContactService::store($parameters['contacts'], $parameters['columns']);
+        return response()->json($response, $response['success'] ? 200 : 400);
     }
-    
+
+    public function getRecords(): JsonResponse
+    {
+        return response()->json(Contact::with('customAttributes')->simplePaginate('10'));
+    }
 }
