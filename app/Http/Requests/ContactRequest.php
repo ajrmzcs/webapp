@@ -25,7 +25,7 @@ class ContactRequest extends FormRequest
     {
         return [
             'contacts' => ['required', 'array'],
-            'columns' => ['required'],
+            'columns' => ['required', 'array'],
         ];
     }
 }

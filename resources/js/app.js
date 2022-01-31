@@ -1,11 +1,9 @@
-
+require('./bootstrap');
 import Vue from 'vue'
-import axios from 'axios'
 import NavBarComponent from './components/NavBar/NavBarComponent'
 import MainMenuComponent from './components/MainMenu/MainMenuComponent'
 import HomeComponent from './components/Home/HomeComponent'
-
-Vue.use(axios)
+import ShowRecordsComponent from './components/ShowRecords/ShowRecordsComponent'
 
 const app = new Vue({
 
@@ -13,6 +11,7 @@ const app = new Vue({
         NavBarComponent,
         MainMenuComponent,
         HomeComponent,
+        ShowRecordsComponent,
     },
 
     data() {
